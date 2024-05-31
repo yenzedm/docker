@@ -62,3 +62,11 @@ networks:
       driver: default
       config:
         - subnet: 172.28.0.0/16
+
+
+
+# delete from file when done 
+#
+# mkdir /opt/zabbix
+# cd /opt/zabbix
+# download and run this yml
