@@ -1,0 +1,22 @@
+groups:
+- name: С хоста нету метрик
+  rules:
+  - alert: С хоста нету метрик
+    expr: up == 0
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Отвалился экспортер, хост {{ $labels.instance }}"
+      description: "С экспортера нету метрик, возмжоно он прилёг. VALUE = {{ $value }}  LABELS: {{ $labels }}"
+
+- name: High CPU usage
+  rules:
+  - alert: High CPU usage
+    expr: avg by (instance) (irate(node_cpu_seconds_total{mode="idle"}[1m]) * 100) < 30
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High usage on {{ $labels.instance }}"
+      description: "{{ $labels.instance }} has a average CPU idle (current value: {{ $value }}s)"
