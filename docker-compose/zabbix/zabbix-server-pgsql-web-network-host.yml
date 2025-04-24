@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+
+  zabbix-postgres:
+    image: postgres:latest
+    container_name: zabbix-postgres
+    hostname: zabbix-postgres
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+      POSTGRES_ROOT_USER: root
+      POSTGRES_ROOT_PASSWORD: 1234
+      POSTGRES_DATABASE: zabbix
+      POSTGRES_USER: zabbix
+      POSTGRES_PASSWORD: 1234
+    network_mode: host
+    volumes:
+      - /opt/zabbix/postgres/data:/var/lib/postgresql/data
+
+  zabbix-server:
+    image: zabbix/zabbix-server-pgsql:latest
+    container_name: zabbix-server
+    hostname: zabbix-server
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+      DB_SERVER_HOST: 127.0.0.1
+      POSTGRES_USER: zabbix
+      POSTGRES_PASSWORD: 1234
+    network_mode: host
+    depends_on:
+      - zabbix-postgres
+
+  zabbix-web:
+    image: zabbix/zabbix-web-nginx-pgsql
+    container_name: zabbix-web
+    hostname: zabbix-web
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Moscow"
+      DB_SERVER_HOST: 127.0.0.1
+      POSTGRES_USER: zabbix
+      POSTGRES_PASSWORD: 1234
+      ZBX_SERVER_HOST: 127.0.0.1
+      PHP_TZ: "Europe/Moscow"
+    network_mode: host
+    depends_on:
+      - zabbix-postgres
+      - zabbix-server
