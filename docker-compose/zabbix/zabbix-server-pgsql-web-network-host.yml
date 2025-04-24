@@ -29,6 +29,12 @@ services:
       POSTGRES_USER: zabbix
       POSTGRES_PASSWORD: 1234
     network_mode: host
+    volumes:
+      - /opt/zabbix/server/alertscripts:/usr/lib/zabbix/alertscripts   
+      - /opt/zabbix/server/externalscripts:/usr/lib/zabbix/externalscripts  
+      - /opt/zabbix/server/modules:/var/lib/zabbix/modules             
+      - /opt/zabbix/server/snmptraps:/var/lib/zabbix/snmptraps         
+      - /opt/zabbix/server/logs:/var/log/zabbix                        
     depends_on:
       - zabbix-postgres
 
@@ -45,6 +51,8 @@ services:
       ZBX_SERVER_HOST: 127.0.0.1
       PHP_TZ: "Europe/Moscow"
     network_mode: host
+    volumes:
+      - /opt/zabbix/web/logs:/var/log/zabbix
     depends_on:
       - zabbix-postgres
       - zabbix-server
